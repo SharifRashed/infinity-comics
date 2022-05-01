@@ -4,6 +4,7 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using InfinityComics1.Utils;
 
 namespace InfinityComics1.Repositories
 {
@@ -42,15 +43,15 @@ namespace InfinityComics1.Repositories
 
                         while (reader.Read())
                         {
-                            ComicBook comicBook = new ComicBook
+                            ComicBook comicBook = new ComicBook()
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Title = reader.GetString(reader.GetOrdinal("Title")),
-                                Description = reader.GetString(reader.GetOrdinal("Description")),
-                                IssueNumber = reader.GetInt32(reader.GetOrdinal("IssueNumber")),
-                                //ReleaseDate = reader.GetDate(reader.GetOrdinal("Id")),
-                                DateAdded = reader.GetDateTime(reader.GetOrdinal("DateAdded")),
-                                UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+                                Id = DbUtils.GetInt(reader,"Id"),
+                                Title = DbUtils.GetString(reader,"Title"),
+                                Description = DbUtils.GetString(reader,"Description"),
+                                IssueNumber = DbUtils.GetInt(reader,"IssueNumber"),
+                                //ReleaseDate = DbUtils.GetDate(reader,"Id"),
+                                DateAdded = DbUtils.GetDateTime(reader,"DateAdded"),
+                                UserProfileId = DbUtils.GetInt(reader,"UserProfileId"),
                             };
                             comicBooks.Add(comicBook);
                         }
@@ -73,18 +74,19 @@ namespace InfinityComics1.Repositories
                        VALUES (@title, @description, @issueNumber, @releaseDate, @dateAdded, @userProfileId);
                         ";
 
-                        cmd.Parameters.AddWithValue("@Id", comicBook.Id);
-                        cmd.Parameters.AddWithValue("@Title", comicBook.Title);
-                        cmd.Parameters.AddWithValue("@Description", comicBook.Description);
-                        cmd.Parameters.AddWithValue("@IssueNumber", comicBook.IssueNumber);
-                        cmd.Parameters.AddWithValue("@DateAdded", comicBook.DateAdded);
-                        //cmd.Parameters.AddWithValue("@ReleaseDate", comicBook.ReleaseDate);
-                        cmd.Parameters.AddWithValue("@UserProfileId", comicBook.UserProfileId);
+                    //DbUtils.AddParameter(cmd, "@Id", comicBook.id);
+                       
+                        DbUtils.AddParameter(cmd, "@Title", comicBook.Title);
+                        DbUtils.AddParameter(cmd, "@Description", comicBook.Description);
+                        DbUtils.AddParameter(cmd, "@IssueNumber", comicBook.IssueNumber);
+                        DbUtils.AddParameter(cmd, "@DateAdded", comicBook.DateAdded);
+                    //DbUtils.AddParameter(cmd, "@ReleaseDate", comicBook.ReleaseDate);
+                        DbUtils.AddParameter(cmd, "@UserProfileId", comicBook.UserProfileId);
 
-                        int id = (int)cmd.ExecuteScalar();
+                    int id = (int)cmd.ExecuteScalar();
 
-                        comicBook.Id = id;
-                    }
+                    comicBook.Id = id;
+                }
                 }
          }
         
