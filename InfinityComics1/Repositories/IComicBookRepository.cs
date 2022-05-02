@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using InfinityComics1.Auth.Models;
 using InfinityComics1.Models;
 
 namespace InfinityComics1.Repositories

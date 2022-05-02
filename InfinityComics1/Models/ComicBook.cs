@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace InfinityComics1.Auth.Models
+namespace InfinityComics1.Models
 {
     public class ComicBook
     { 
@@ -18,5 +18,8 @@ namespace InfinityComics1.Auth.Models
 
         public int UserProfileId { get; set; }
         public UserProfile UserProfile { get; set; }
+
+        public int AuthorId { get; set; }
+        public Author Author { get; set; }
     }
 }

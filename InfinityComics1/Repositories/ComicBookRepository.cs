@@ -1,10 +1,11 @@
-﻿using InfinityComics1.Auth.Models;
+﻿using InfinityComics1.Models;
 using System.Collections.Generic;
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using InfinityComics1.Utils;
+using Microsoft.AspNetCore.Mvc;
 
 namespace InfinityComics1.Repositories
 {
@@ -26,7 +27,7 @@ namespace InfinityComics1.Repositories
         public List<ComicBook> GetAllComicBooks()
         {
             using (SqlConnection conn = Connection)
-            {
+            {   
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
@@ -69,12 +70,10 @@ namespace InfinityComics1.Repositories
                     using (SqlCommand cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = @" 
-                       INSERT INTO ComicBook ([Title], Description, IssueNumber, ReleaseDate, DateAdded, UserProfileId)
+                       INSERT INTO ComicBook ([Title], Description, IssueNumber, DateAdded, UserProfileId)
                        OUTPUT INSERTED.Id
-                       VALUES (@title, @description, @issueNumber, @releaseDate, @dateAdded, @userProfileId);
-                        ";
-
-                    //DbUtils.AddParameter(cmd, "@Id", comicBook.id);
+                       VALUES (@title, @description, @issueNumber, @dateAdded, @userProfileId);
+                        ";                 
                        
                         DbUtils.AddParameter(cmd, "@Title", comicBook.Title);
                         DbUtils.AddParameter(cmd, "@Description", comicBook.Description);
@@ -88,7 +87,7 @@ namespace InfinityComics1.Repositories
                     comicBook.Id = id;
                 }
                 }
-         }
+         }  
         
     }
 }
