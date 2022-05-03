@@ -1,4 +1,4 @@
-﻿using InfinityComics1.Auth.Models;
+﻿using InfinityComics1.Models;
 using System.Collections.Generic;
 
 namespace InfinityComics1.Models.ViewModels

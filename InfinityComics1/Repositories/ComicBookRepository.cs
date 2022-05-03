@@ -32,7 +32,7 @@ namespace InfinityComics1.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @" 
-                       SELECT Id, [Title], Description, IssueNumber, DateAdded, UserProfileId
+                       SELECT Id, [Title], Description, IssueNumber, DateAdded, UserProfileId, AuthorId
                         FROM ComicBook  
                       ";
 
@@ -70,9 +70,9 @@ namespace InfinityComics1.Repositories
                     using (SqlCommand cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = @" 
-                       INSERT INTO ComicBook ([Title], Description, IssueNumber, DateAdded, UserProfileId)
+                       INSERT INTO ComicBook ([Title], Description, IssueNumber, DateAdded, UserProfileId, AuthorId)
                        OUTPUT INSERTED.Id
-                       VALUES (@title, @description, @issueNumber, @dateAdded, @userProfileId);
+                       VALUES (@title, @description, @issueNumber, @dateAdded, @userProfileId, @AuthorId);
                         ";                 
                        
                         DbUtils.AddParameter(cmd, "@Title", comicBook.Title);
@@ -81,13 +81,17 @@ namespace InfinityComics1.Repositories
                         DbUtils.AddParameter(cmd, "@DateAdded", comicBook.DateAdded);
                     //DbUtils.AddParameter(cmd, "@ReleaseDate", comicBook.ReleaseDate);
                         DbUtils.AddParameter(cmd, "@UserProfileId", comicBook.UserProfileId);
+                        DbUtils.AddParameter(cmd, "@AuthorId", comicBook.AuthorId);
 
                     int id = (int)cmd.ExecuteScalar();
+                    //post.Id = (int)cmd.ExecuteScalar();
 
                     comicBook.Id = id;
                 }
                 }
          }  
+
+
         
     }
 }

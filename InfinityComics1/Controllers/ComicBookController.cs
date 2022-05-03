@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using InfinityComics1.Auth.Models;
 using InfinityComics1.Models;
+using InfinityComics1.Models.ViewModels;
 using InfinityComics1.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +11,13 @@ namespace InfinityComics1.Controllers
 {
     public class ComicBookController : Controller
     {
-
+       
         private readonly IComicBookRepository _comicBookRepository;
-        public ComicBookController(IComicBookRepository comicBookRepository)
+        private readonly IAuthorRepository _authorRepository;
+        public ComicBookController(IComicBookRepository comicBookRepository, IAuthorRepository authorRepository)
         {
             _comicBookRepository = comicBookRepository;
+            _authorRepository = authorRepository;
         }
         public IActionResult Index()
         {
@@ -27,26 +29,37 @@ namespace InfinityComics1.Controllers
         // GET: ComicBookController/Create
         public ActionResult Create()
         {
-            return View();
+            List<Author> authors = _authorRepository.GetAllAuthors();
+
+            ComicBookFormViewModel vm = new ComicBookFormViewModel()
+            {               
+                Authors = authors
+            };
+
+            return View(vm);
         }
 
 
         //POST: ComicBookController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ComicBook comicBook)
+        public ActionResult Create(ComicBookFormViewModel vm)
         {
             try
             {
-                comicBook.UserProfileId = GetCurrentUserId();
+                vm.ComicBook.UserProfileId = GetCurrentUserId();
 
-                _comicBookRepository.AddComicBook(comicBook);
+                _comicBookRepository.AddComicBook(vm.ComicBook);
 
                 return RedirectToAction("Index");
             }
             catch (Exception Ex)
             {
-                return View(comicBook);
+                List<Author> authors = _authorRepository.GetAllAuthors();
+                vm.Authors = authors;
+              
+
+                return View(vm);
             }
         }
 

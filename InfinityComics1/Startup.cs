@@ -32,6 +32,7 @@ namespace InfinityComics1
             services.AddTransient<IFirebaseAuthService, FirebaseAuthService>();
             services.AddTransient<IUserProfileRepository, UserProfileRepository>();
             services.AddTransient<IComicBookRepository, ComicBookRepository>();
+            services.AddTransient<IAuthorRepository, AuthorRepository>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => options.Cookie.SameSite = SameSiteMode.Strict);
         }
