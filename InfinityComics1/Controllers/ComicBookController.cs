@@ -38,7 +38,7 @@ namespace InfinityComics1.Controllers
             List<Author> authors = _authorRepository.GetAllAuthors();
 
             ComicBookFormViewModel vm = new ComicBookFormViewModel()
-            {               
+            {
                 Authors = authors
             };
 
@@ -63,33 +63,43 @@ namespace InfinityComics1.Controllers
             {
                 List<Author> authors = _authorRepository.GetAllAuthors();
                 vm.Authors = authors;
-              
+
 
                 return View(vm);
             }
         }
+     
 
-        // GET: ComicBookController/Delete/5
+        // GET: DogController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            ComicBook comicBook = _comicBookRepository.GetComicBookById(id);
+            if (comicBook != null)
+            {
+                return View(comicBook);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
-        // POST: ComicBookController/Delete/5
+        // POST: DogController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, ComicBook comicBook)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _comicBookRepository.Delete(id);
+                return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return View(comicBook);
             }
-        }       
 
-       
+
+        }
     }
 }
