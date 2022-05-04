@@ -32,6 +32,17 @@ namespace InfinityComics1.Controllers
             return View(comicBooks);
         }
 
+        public ActionResult Details(int id)
+        {
+            ComicBook comicBook = _comicBookRepository.GetComicBookById(id);
+
+            if (comicBook == null)
+            {
+                return NotFound();
+            } 
+            return View(comicBook);
+        }
+
         // GET: ComicBookController/Create
         public ActionResult Create()
         {
