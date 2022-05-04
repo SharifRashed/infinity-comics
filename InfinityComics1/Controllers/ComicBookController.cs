@@ -11,7 +11,13 @@ namespace InfinityComics1.Controllers
 {
     public class ComicBookController : Controller
     {
-       
+
+        private int GetCurrentUserId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
+        }
+
         private readonly IComicBookRepository _comicBookRepository;
         private readonly IAuthorRepository _authorRepository;
         public ComicBookController(IComicBookRepository comicBookRepository, IAuthorRepository authorRepository)
@@ -63,10 +69,27 @@ namespace InfinityComics1.Controllers
             }
         }
 
-        private int GetCurrentUserId()
+        // GET: ComicBookController/Delete/5
+        public ActionResult Delete(int id)
         {
-            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.Parse(id);
+            return View();
         }
+
+        // POST: ComicBookController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }       
+
+       
     }
 }
