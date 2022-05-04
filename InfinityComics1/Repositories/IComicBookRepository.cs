@@ -6,6 +6,10 @@ namespace InfinityComics1.Repositories
     public interface IComicBookRepository
     {
         void AddComicBook(ComicBook comicBook);
-        List<ComicBook> GetAllComicBooks();      
+        List<ComicBook> GetAllComicBooks();       
+        ComicBook GetComicBookById(int id);
+
+        void Delete(int id);
+       
     }
 }

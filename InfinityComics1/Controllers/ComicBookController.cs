@@ -11,7 +11,13 @@ namespace InfinityComics1.Controllers
 {
     public class ComicBookController : Controller
     {
-       
+
+        private int GetCurrentUserId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
+        }
+
         private readonly IComicBookRepository _comicBookRepository;
         private readonly IAuthorRepository _authorRepository;
         public ComicBookController(IComicBookRepository comicBookRepository, IAuthorRepository authorRepository)
@@ -32,7 +38,7 @@ namespace InfinityComics1.Controllers
             List<Author> authors = _authorRepository.GetAllAuthors();
 
             ComicBookFormViewModel vm = new ComicBookFormViewModel()
-            {               
+            {
                 Authors = authors
             };
 
@@ -57,16 +63,43 @@ namespace InfinityComics1.Controllers
             {
                 List<Author> authors = _authorRepository.GetAllAuthors();
                 vm.Authors = authors;
-              
+
 
                 return View(vm);
             }
         }
+     
 
-        private int GetCurrentUserId()
+        // GET: DogController/Delete/5
+        public ActionResult Delete(int id)
         {
-            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.Parse(id);
+            ComicBook comicBook = _comicBookRepository.GetComicBookById(id);
+            if (comicBook != null)
+            {
+                return View(comicBook);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        // POST: DogController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, ComicBook comicBook)
+        {
+            try
+            {
+                _comicBookRepository.Delete(id);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View(comicBook);
+            }
+
+
         }
     }
 }

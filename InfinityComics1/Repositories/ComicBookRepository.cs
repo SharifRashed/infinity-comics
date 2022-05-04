@@ -62,8 +62,44 @@ namespace InfinityComics1.Repositories
             }
         }
 
-         public void AddComicBook(ComicBook comicBook)
+        public ComicBook GetComicBookById(int id)
         {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    SELECT Id, [Title], Description, IssueNumber, DateAdded, AuthorId, UserProfileId
+                    FROM ComicBook
+                    WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (SqlDataReader reader =cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            ComicBook comicBook = new ComicBook()
+                            {
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Title = DbUtils.GetString(reader, "Title"),
+                                Description = DbUtils.GetString(reader, "Description"),
+                                IssueNumber = DbUtils.GetInt(reader, "IssueNumber"),
+                                //ReleaseDate = DbUtils.GetDate(reader,"Id"),
+                                DateAdded = DbUtils.GetDateTime(reader, "DateAdded"),
+                                UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
+                            };
+                            return comicBook;
+                        }
+                        return null;
+                    }
+                }
+            }
+        }
+
+         public void AddComicBook(ComicBook comicBook)
+         {
                 using (SqlConnection conn = Connection)
                 {
                     conn.Open();
@@ -89,9 +125,25 @@ namespace InfinityComics1.Repositories
                     comicBook.Id = id;
                 }
                 }
-         }  
+         }    
 
+        public void Delete(int comicBook)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    DELETE FROM ComicBook 
+                    WHERE Id = @comicBook"
+                    ;
+                    cmd.Parameters.AddWithValue("@comicBook", comicBook);
 
-        
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }
