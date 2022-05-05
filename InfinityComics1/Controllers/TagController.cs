@@ -1,6 +1,7 @@
 ﻿using InfinityComics1.Models.ViewModels;
 using InfinityComics1.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace InfinityComics1.Controllers
 {
@@ -26,12 +27,9 @@ namespace InfinityComics1.Controllers
 
         public ActionResult Create(int id)
         {
-            int userProfileId = GetCurrentUserId();
-            var cbvm = new ComicBookFormViewModel();
-            cbvm.Tags = _tagRepository.GetAllTags();
-            cbvm.ComicBook = _comicBookRepository.GetById(id);
-
-            return View(cbvm);
-        }
+           
+            return View();
+        } 
+      
     }
 }

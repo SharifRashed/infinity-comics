@@ -20,10 +20,12 @@ namespace InfinityComics1.Controllers
 
         private readonly IComicBookRepository _comicBookRepository;
         private readonly IAuthorRepository _authorRepository;
-        public ComicBookController(IComicBookRepository comicBookRepository, IAuthorRepository authorRepository)
+        private readonly ITagRepository _tagRepository;
+        public ComicBookController(IComicBookRepository comicBookRepository, IAuthorRepository authorRepository, ITagRepository tagRepository)
         {
             _comicBookRepository = comicBookRepository;
             _authorRepository = authorRepository;
+            _tagRepository = tagRepository;
         }
         public IActionResult Index()
         {
@@ -34,13 +36,19 @@ namespace InfinityComics1.Controllers
 
         public ActionResult Details(int id)
         {
-            ComicBook comicBook = _comicBookRepository.GetComicBookById(id);
-
-            if (comicBook == null)
+            
+            //ComicBook comicBook = _comicBookRepository.GetComicBookById(id);
+            List<Tag> tags = _tagRepository.GetAllTags();
+            ComicBookFormViewModel vm = new ComicBookFormViewModel()
+            {
+                Tags = tags
+            };
+          
+            if (vm == null)
             {
                 return NotFound();
             } 
-            return View(comicBook);
+            return View(vm);
         }
 
         // GET: ComicBookController/Create

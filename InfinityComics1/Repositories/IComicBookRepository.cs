@@ -11,5 +11,6 @@ namespace InfinityComics1.Repositories
 
         void Delete(int id);
        void Update(ComicBook comicBook);
+
     }
 }

@@ -8,7 +8,5 @@ namespace InfinityComics1.Repositories
         List<Tag> GetAllTags();
 
         Tag GetTagById(int id);
-
-
     }
 }
