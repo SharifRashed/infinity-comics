@@ -79,9 +79,43 @@ namespace InfinityComics1.Controllers
                 return View(vm);
             }
         }
-     
+        //GET: ComicBook/Edit/1
+        public ActionResult Edit(int id)
+        {
+            ComicBook comicBook = _comicBookRepository.GetComicBookById(id);
+            ComicBookFormViewModel comicBookFormViewModel = new ComicBookFormViewModel()
+            {
+                ComicBook = comicBook,
+                Authors = _authorRepository.GetAllAuthors(),
+            };
 
-        // GET: DogController/Delete/5
+            if (comicBook == null)
+            {
+                return NotFound();
+            }
+
+            return View(comicBookFormViewModel);
+        }
+
+        //POST: ComicBook/Edit/1
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, ComicBookFormViewModel comicBookFormViewModel)
+        {
+            try
+            {
+                comicBookFormViewModel.ComicBook.UserProfileId = GetCurrentUserId();
+                _comicBookRepository.Update(comicBookFormViewModel.ComicBook);
+              
+                return RedirectToAction("Index");
+            }
+            catch(Exception ex)
+            {
+                return View(comicBookFormViewModel.ComicBook);
+            }
+        }
+
+        // GET: ComicBookController/Delete/1
         public ActionResult Delete(int id)
         {
             ComicBook comicBook = _comicBookRepository.GetComicBookById(id);
