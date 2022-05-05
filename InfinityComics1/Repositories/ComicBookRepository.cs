@@ -145,5 +145,37 @@ namespace InfinityComics1.Repositories
             }
         }
 
+        public void Update(ComicBook comicBook)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE ComicBook
+                            SET
+                                [Title] = @title,
+                                Description = @description,
+                                IssueNumber = @issueNumber,
+                                DateAdded = @dateAdded,
+                                UserProfileId = @userProfileId,
+                                AuthorId = @authorId                               
+                            WHERE Id = @id
+                               ";
+                    cmd.Parameters.AddWithValue("@id", comicBook.Id);
+                    cmd.Parameters.AddWithValue("@title", comicBook.Title);
+                    cmd.Parameters.AddWithValue("@description", comicBook.Description);
+                    cmd.Parameters.AddWithValue("@issueNumber", comicBook.IssueNumber);
+                    cmd.Parameters.AddWithValue("@dateAdded", comicBook.DateAdded);
+                    cmd.Parameters.AddWithValue("@userProfileId", comicBook.UserProfileId);
+                    cmd.Parameters.AddWithValue("@authorId", comicBook.AuthorId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }

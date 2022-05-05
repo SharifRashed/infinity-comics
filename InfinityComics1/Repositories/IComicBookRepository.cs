@@ -10,6 +10,6 @@ namespace InfinityComics1.Repositories
         ComicBook GetComicBookById(int id);
 
         void Delete(int id);
-       
+       void Update(ComicBook comicBook);
     }
 }
