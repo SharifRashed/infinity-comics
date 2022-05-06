@@ -33,6 +33,7 @@ namespace InfinityComics1
             services.AddTransient<IUserProfileRepository, UserProfileRepository>();
             services.AddTransient<IComicBookRepository, ComicBookRepository>();
             services.AddTransient<IAuthorRepository, AuthorRepository>();
+            services.AddTransient<ITagRepository, TagRepository>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => options.Cookie.SameSite = SameSiteMode.Strict);
         }

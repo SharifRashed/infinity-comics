@@ -22,10 +22,30 @@ namespace InfinityComics1.Repositories
         {
             get
             {
-                return new SqlConnection(_config.GetConnectionString("DefualtConnection"));
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
 
+        //create a method to insert data to comicTag (comic Id, tag Id)
+
+        public void SaveComicTag(int TagId , int ComicBookId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    INSERT INTO ComicTag (TagId, ComicBookId)
+                    OUTPUT Inserted.Id
+                    VALUES ( @TagId, @ComicBookId)
+                        ";
+                    DbUtils.AddParameter(cmd, "@TagId", TagId);
+                    DbUtils.AddParameter(cmd, "@ComicBookId", ComicBookId);
+                    var reader = cmd.ExecuteScalar();
+                }
+            }
+        }
         public List<Tag> GetAllTags()
         {
             using (SqlConnection conn = Connection)
@@ -35,7 +55,7 @@ namespace InfinityComics1.Repositories
                 {
                     cmd.CommandText = @" 
                        SELECT Id, [TagName]
-                        FROM ComicBook  
+                        FROM Tag  
                       ";
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
@@ -87,6 +107,29 @@ namespace InfinityComics1.Repositories
                         }
                         return null;
                     }
+                }
+            }
+        }
+
+        public void AddTag(Tag tag)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" 
+                       INSERT INTO ComicTag ([TagName])
+                       OUTPUT INSERTED.Id
+                       VALUES (@TagName,);
+                        ";
+
+               
+
+                    int id = (int)cmd.ExecuteScalar();
+                    //post.Id = (int)cmd.ExecuteScalar();
+
+                    tag.Id = id;
                 }
             }
         }

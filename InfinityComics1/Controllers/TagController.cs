@@ -9,7 +9,7 @@ namespace InfinityComics1.Controllers
     {
         private readonly ITagRepository _tagRepository;
         private readonly IComicBookRepository _comicBookRepository;
-     
+        #region tag
         public TagController(ITagRepository tagRepository, IComicBookRepository comicBookRepository)
         {
             _comicBookRepository = comicBookRepository;
@@ -29,7 +29,7 @@ namespace InfinityComics1.Controllers
         {
            
             return View();
-        } 
-      
+        }
+        #endregion tag
     }
 }

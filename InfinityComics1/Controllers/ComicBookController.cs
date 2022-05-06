@@ -34,14 +34,46 @@ namespace InfinityComics1.Controllers
             return View(comicBooks);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveComicBookTags(int id, ComicBookFormViewModel vm)
+        {
+
+            try
+            {
+                //[1,3,7] list of tag ids
+                //comicbookid 4
+                //steps:
+
+                foreach(int tagId in vm.SelectedTagIds)
+                {
+                 _tagRepository.SaveComicTag(tagId, vm.ComicBook.Id);                 
+              
+                }
+                //interate over the tag array(vm) to get selectedTagIds
+                //add to the comicTag table(create a method)
+              
+                    return RedirectToAction("Index");
+            }
+            catch (Exception Ex)
+            {
+                List<Tag> tags = _tagRepository.GetAllTags();
+                vm.Tags = tags;
+
+
+                return View(vm);
+            }
+
+        }
         public ActionResult Details(int id)
         {
+            ComicBook comicBook = _comicBookRepository.GetComicBookById(id);              
             
-            //ComicBook comicBook = _comicBookRepository.GetComicBookById(id);
             List<Tag> tags = _tagRepository.GetAllTags();
             ComicBookFormViewModel vm = new ComicBookFormViewModel()
             {
-                Tags = tags
+                Tags = tags,
+                ComicBook = comicBook
             };
           
             if (vm == null)
@@ -137,7 +169,7 @@ namespace InfinityComics1.Controllers
             }
         }
 
-        // POST: DogController/Delete/5
+        // POST: ComicBookController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, ComicBook comicBook)
