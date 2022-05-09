@@ -22,6 +22,7 @@ namespace InfinityComics1.Controllers
 
         public ActionResult Details(int id)
         {
+            
             return View();
         }
 

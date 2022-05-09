@@ -44,15 +44,13 @@ namespace InfinityComics1.Controllers
                 //[1,3,7] list of tag ids
                 //comicbookid 4
                 //steps:
-
-                foreach(int tagId in vm.SelectedTagIds)
-                {
-                 _tagRepository.SaveComicTag(tagId, vm.ComicBook.Id);                 
-              
-                }
                 //interate over the tag array(vm) to get selectedTagIds
                 //add to the comicTag table(create a method)
-              
+
+                foreach (int tagId in vm.SelectedTagIds)
+                {                   
+                    _tagRepository.SaveComicTag(tagId, id);                 
+                }                       
                     return RedirectToAction("Index");
             }
             catch (Exception Ex)
@@ -67,11 +65,12 @@ namespace InfinityComics1.Controllers
         }
         public ActionResult Details(int id)
         {
-            ComicBook comicBook = _comicBookRepository.GetComicBookById(id);              
-            
+            ComicBook comicBook = _comicBookRepository.GetComicBookById(id);
+            /*_tagRepository.GetTagByComicId(id)*/;
             List<Tag> tags = _tagRepository.GetAllTags();
             ComicBookFormViewModel vm = new ComicBookFormViewModel()
             {
+                SelectedTagIds = _tagRepository.GetTagByComicId(id),
                 Tags = tags,
                 ComicBook = comicBook
             };

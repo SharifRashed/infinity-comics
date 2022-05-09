@@ -111,6 +111,36 @@ namespace InfinityComics1.Repositories
             }
         }
 
+        public List<int> GetTagByComicId(int comicBookId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                     SELECT DISTINCT ct.TagId 
+                    FROM ComicTag ct                   
+                    WHERE ct.ComicBookId = @id";
+
+
+                    cmd.Parameters.AddWithValue("@id", comicBookId);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        List<int> SelectedTagIds = new List<int>();
+                        while (reader.Read())
+                        {
+                            int SelectedId = DbUtils.GetInt(reader, "TagId");
+                                
+                            SelectedTagIds.Add(SelectedId);
+                        }
+                        return SelectedTagIds;
+                    }
+                }
+            }
+        }
+
         public void AddTag(Tag tag)
         {
             using (SqlConnection conn = Connection)

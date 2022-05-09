@@ -7,7 +7,7 @@ namespace InfinityComics1.Repositories
     {
         List<Tag> GetAllTags();     
         Tag GetTagById(int id);
-
+        List<int> GetTagByComicId(int id);
         public void SaveComicTag(int TagId, int ComicBookId);  
     }
 }

@@ -35,10 +35,10 @@
             @Html.DisplayFor(ComicBookFormViewModel => ComicBookFormViewModel.ComicBook.DateAdded)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(ComicBookFormViewModel => ComicBookFormViewModel.ComicBook.AuthorId)
+            @Html.DisplayNameFor(ComicBookFormViewModel => ComicBookFormViewModel.ComicBook.Author.Name)
         </dt> 
         <dt class = "col-sm-2">
-            @Html.DisplayFor(ComicBookFormViewModel => ComicBookFormViewModel.ComicBook.AuthorId)
+            @Html.DisplayFor(ComicBookFormViewModel => ComicBookFormViewModel.ComicBook.Author.Name)
         </dt>  
     </dl>
 </div>
@@ -49,6 +49,8 @@
         <select multiple asp-for="SelectedTagIds" class="form-control">
                 @foreach (var tag in Model.Tags)
                 {
+                   @* bool isSelected = Model.SelectedTagIds.Contains(tag.Id);*@
+
                 <option value="@tag.Id">@tag.TagName</option>
                 }
         </select>

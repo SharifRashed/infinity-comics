@@ -7,8 +7,7 @@ namespace InfinityComics1.Repositories
     {
         void AddComicBook(ComicBook comicBook);
         List<ComicBook> GetAllComicBooks();       
-        ComicBook GetComicBookById(int id);
-
+        ComicBook GetComicBookById(int id);      
         void Delete(int id);
        void Update(ComicBook comicBook);
 
