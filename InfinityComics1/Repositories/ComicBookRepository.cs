@@ -24,21 +24,25 @@ namespace InfinityComics1.Repositories
                 return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
-        public List<ComicBook> GetAllComicBooks()
+        public List<ComicBook> GetAllComicBooks(int id)
         {
             using (SqlConnection conn = Connection)
             {   
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
+                    //go to the server to retrieve info
                     cmd.CommandText = @" 
                        SELECT Id, [Title], Description, IssueNumber, DateAdded, UserProfileId, AuthorId
-                        FROM ComicBook  
+                       FROM ComicBook 
+                       WHERE UserProfileId = @userId
                       ";
+
+                    cmd.Parameters.AddWithValue("@userId", id);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-
+                     ///after exectute data, return objects 
 
                         List<ComicBook> comicBooks = new List<ComicBook>();
 
@@ -70,9 +74,11 @@ namespace InfinityComics1.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    SELECT Id, [Title], Description, IssueNumber, DateAdded, AuthorId, UserProfileId
-                    FROM ComicBook
-                    WHERE Id = @id";
+                     SELECT cb.Id, [Title], cb.Description, IssueNumber, DateAdded, Name, UserProfileId
+                    FROM ComicBook cb
+                    JOIN Author ON cb.AuthorId = Author.Id
+                    WHERE cb.Id = @id
+                    ";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -88,6 +94,10 @@ namespace InfinityComics1.Repositories
                                 IssueNumber = DbUtils.GetInt(reader, "IssueNumber"),
                                 //ReleaseDate = DbUtils.GetDate(reader,"Id"),
                                 DateAdded = DbUtils.GetDateTime(reader, "DateAdded"),
+                                Author = new Author()
+                                {
+                                    Name = DbUtils.GetString(reader, "Name"),
+                                },
                                 UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
                             };
                             return comicBook;

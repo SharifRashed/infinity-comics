@@ -28,8 +28,12 @@ namespace InfinityComics1.Repositories
 
         //create a method to insert data to comicTag (comic Id, tag Id)
 
+        
+
+
         public void SaveComicTag(int TagId , int ComicBookId)
         {
+           
             using (var conn = Connection)
             {
                 conn.Open();
@@ -141,6 +145,25 @@ namespace InfinityComics1.Repositories
             }
         }
 
+        public void DeleteTagByComic(int comicBookId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    DELETE
+                    FROM ComicTag                 
+                    WHERE ComicBookId = @id";
+
+                 
+                    cmd.Parameters.AddWithValue("@id", comicBookId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
         public void AddTag(Tag tag)
         {
             using (SqlConnection conn = Connection)

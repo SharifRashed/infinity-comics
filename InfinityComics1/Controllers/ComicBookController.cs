@@ -30,7 +30,7 @@ namespace InfinityComics1.Controllers
         public IActionResult Index()
         {
             int userProfileId = GetCurrentUserId();
-            List<ComicBook> comicBooks = _comicBookRepository.GetAllComicBooks();
+            List<ComicBook> comicBooks = _comicBookRepository.GetAllComicBooks(userProfileId);
             return View(comicBooks);
         }
 
@@ -41,11 +41,7 @@ namespace InfinityComics1.Controllers
 
             try
             {
-                //[1,3,7] list of tag ids
-                //comicbookid 4
-                //steps:
-                //interate over the tag array(vm) to get selectedTagIds
-                //add to the comicTag table(create a method)
+                _tagRepository.DeleteTagByComic(id);
 
                 foreach (int tagId in vm.SelectedTagIds)
                 {                   
@@ -185,5 +181,6 @@ namespace InfinityComics1.Controllers
 
 
         }
+
     }
 }
