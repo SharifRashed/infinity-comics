@@ -20,27 +20,62 @@ namespace InfinityComics1.Controllers
 
         private readonly IComicBookRepository _comicBookRepository;
         private readonly IAuthorRepository _authorRepository;
-        public ComicBookController(IComicBookRepository comicBookRepository, IAuthorRepository authorRepository)
+        private readonly ITagRepository _tagRepository;
+        public ComicBookController(IComicBookRepository comicBookRepository, IAuthorRepository authorRepository, ITagRepository tagRepository)
         {
             _comicBookRepository = comicBookRepository;
             _authorRepository = authorRepository;
+            _tagRepository = tagRepository;
         }
         public IActionResult Index()
         {
             int userProfileId = GetCurrentUserId();
-            List<ComicBook> comicBooks = _comicBookRepository.GetAllComicBooks();
+            List<ComicBook> comicBooks = _comicBookRepository.GetAllComicBooks(userProfileId);
             return View(comicBooks);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveComicBookTags(int id, ComicBookFormViewModel vm)
+        {
+
+            try
+            {
+                _tagRepository.DeleteTagByComic(id);
+
+                foreach (int tagId in vm.SelectedTagIds)
+                {                   
+                    _tagRepository.SaveComicTag(tagId, id);                 
+                }                       
+                    return RedirectToAction("Index");
+            }
+            catch (Exception Ex)
+            {
+                List<Tag> tags = _tagRepository.GetAllTags();
+                vm.Tags = tags;
+
+
+                return View(vm);
+            }
+
+        }
         public ActionResult Details(int id)
         {
             ComicBook comicBook = _comicBookRepository.GetComicBookById(id);
-
-            if (comicBook == null)
+            /*_tagRepository.GetTagByComicId(id)*/;
+            List<Tag> tags = _tagRepository.GetAllTags();
+            ComicBookFormViewModel vm = new ComicBookFormViewModel()
+            {
+                SelectedTagIds = _tagRepository.GetTagByComicId(id),
+                Tags = tags,
+                ComicBook = comicBook
+            };
+          
+            if (vm == null)
             {
                 return NotFound();
             } 
-            return View(comicBook);
+            return View(vm);
         }
 
         // GET: ComicBookController/Create
@@ -129,7 +164,7 @@ namespace InfinityComics1.Controllers
             }
         }
 
-        // POST: DogController/Delete/5
+        // POST: ComicBookController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, ComicBook comicBook)
@@ -146,5 +181,6 @@ namespace InfinityComics1.Controllers
 
 
         }
+
     }
 }
