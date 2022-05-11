@@ -49,7 +49,7 @@
         <select multiple asp-for="SelectedTagIds" class="form-control">
                 @foreach (var tag in Model.Tags)
                 {
-                   @* bool isSelected = Model.SelectedTagIds.Contains(tag.Id);*@
+                  
 
                 <option value="@tag.Id">@tag.TagName</option>
                 }
